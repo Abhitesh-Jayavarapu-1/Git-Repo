@@ -395,11 +395,10 @@ class _MobileLayoutState extends State<MobileLayout> {
                                       child: Text('Confirm Password',
                                           style: TextStyle(fontSize: 18))),
                                   InputBox(
-                                    controller: reEnterPasswordController,
-                                    icon: Icons.lock,
-                                    hintText: 'Confirm your password',
-                                    isPassword: true,
-                                  ),
+                                      controller: reEnterPasswordController,
+                                      icon: Icons.lock,
+                                      hintText: 'Confirm your password',
+                                      otherController: passwordController),
                                   SizedBox(height: 10),
                                   Text(
                                     'Please allow one business day for the Internet Banking to be set up after your account has been activated. If you are having trouble accessing your online banking, you can always reset your password',
@@ -558,6 +557,29 @@ class _MobileLayoutState extends State<MobileLayout> {
                                               border: OutlineInputBorder(),
                                               labelText: 'Password',
                                             ),
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            validator: (value) {
+                                              if (value == '') return null;
+                                              // Comprehensive validation pattern using a regular expression
+                                              final passwordRegex = RegExp(
+                                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                                              );
+
+                                              if (!passwordRegex
+                                                  .hasMatch(value!)) {
+                                                return 'Password must meet the following requirements:';
+                                              }
+
+                                              // Additional check for email address pattern
+                                              final emailRegex =
+                                                  RegExp(r'\S+@\S+\.\S+');
+                                              if (emailRegex.hasMatch(value)) {
+                                                return 'Password cannot contain an email address';
+                                              }
+
+                                              return null; // Validation passes
+                                            },
                                           ),
                                         ),
                                         SizedBox(width: 16.0),
@@ -570,6 +592,17 @@ class _MobileLayoutState extends State<MobileLayout> {
                                               border: OutlineInputBorder(),
                                               labelText: 'Confirm Password',
                                             ),
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            validator: (value) {
+                                              if (value == '') return null;
+
+                                              if (value !=
+                                                  passwordController.text)
+                                                return 'Password and Confirm Password should match';
+
+                                              return null; // Validation passes
+                                            },
                                           ),
                                         ),
                                       ],
@@ -765,13 +798,14 @@ class InputBox extends StatelessWidget {
   final IconData icon;
   final String hintText;
   final bool isPassword;
+  final TextEditingController? otherController;
 
-  InputBox({
-    required this.controller,
-    required this.icon,
-    required this.hintText,
-    this.isPassword = false,
-  });
+  InputBox(
+      {required this.controller,
+      required this.icon,
+      required this.hintText,
+      this.isPassword = false,
+      this.otherController});
 
   @override
   Widget build(BuildContext context) {
@@ -790,13 +824,38 @@ class InputBox extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       controller: controller,
-                      obscureText: isPassword,
+                      obscureText: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: hintText,
                       ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == '') return null;
+
+                        if (isPassword) {
+                          // Comprehensive validation pattern using a regular expression
+                          final passwordRegex = RegExp(
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                          );
+
+                          if (!passwordRegex.hasMatch(value!)) {
+                            return 'Password must meet the following requirements:';
+                          }
+
+                          // Additional check for email address pattern
+                          final emailRegex = RegExp(r'\S+@\S+\.\S+');
+                          if (emailRegex.hasMatch(value)) {
+                            return 'Password cannot contain an email address';
+                          }
+                        } else {
+                          if (value != otherController?.text)
+                            return 'Password and Confirm Password should match';
+                        }
+
+                        return null; // Validation passes
+                      },
                     ),
                   ),
                   Container(

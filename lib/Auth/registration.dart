@@ -526,12 +526,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 ? ElevatedButton(
                                     onPressed: () {
                                       // Handle registration here
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                WelcomePage()),
-                                      );
+                                      _handleRegistration();
                                     },
                                     style: ElevatedButton.styleFrom(
                                       primary:
@@ -592,12 +587,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                                 onPressed: () {
                                                   // Handle registration here
                                                   _handleRegistration();
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            WelcomePage()),
-                                                  );
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   primary: Color.fromARGB(
@@ -672,24 +661,65 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // Implement your registration logic here
     // You can access all the entered data using the controllers
     // For example:
-    // final String title = selectedTitle;
-    // final String firstName = firstNameController.text;
-    // final String middleName = middleNameController.text;
-    // final String lastName = lastNameController.text;
-    // final String dob = dobController.text;
-    // final String email = emailController.text;
-    // final String reEnterEmail = reEnterEmailController.text;
-    // final String password = passwordController.text;
-    // final String reEnterPassword = reEnterPasswordController.text;
-    // final String accountUsageValue = accountUsage;
-    // final String securityQuestion1Value = securityQuestion1;
-    // final String securityAnswer1 = securityAnswer1Controller.text;
-    // final String securityQuestion2Value = securityQuestion2;
-    // final String securityAnswer2 = securityAnswer2Controller.text;
-    // final String securityQuestion3Value = securityQuestion3;
-    // final String securityAnswer3 = securityAnswer3Controller.text;
+    final String title = selectedTitle;
+    final String firstName = firstNameController.text;
+    final String middleName = middleNameController.text;
+    final String lastName = lastNameController.text;
+    final String dob = dobController.text;
+    final String email = emailController.text;
+    final String reEnterEmail = reEnterEmailController.text;
+    final String password = passwordController.text;
+    final String reEnterPassword = reEnterPasswordController.text;
+    final String accountUsageValue = accountUsage;
+    final String securityQuestion1Value = securityQuestion1;
+    final String securityAnswer1 = securityAnswer1Controller.text;
+    final String securityQuestion2Value = securityQuestion2;
+    final String securityAnswer2 = securityAnswer2Controller.text;
+    final String securityQuestion3Value = securityQuestion3;
+    final String securityAnswer3 = securityAnswer3Controller.text;
+
+    final fields = [
+      selectedTitle,
+      firstNameController.text,
+      middleNameController.text,
+      lastNameController.text,
+      dobController.text,
+      emailController.text,
+      reEnterEmailController.text,
+      passwordController.text,
+      reEnterPasswordController.text,
+      accountUsage,
+      securityQuestion1Value,
+      securityAnswer1Controller.text,
+      securityQuestion2Value,
+      securityAnswer2Controller.text,
+      securityQuestion3Value,
+      securityAnswer3Controller.text,
+    ];
+
+    if (fields.any((field) => field.isEmpty)) {
+      // Show alert dialog if any field is empty
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Incomplete Information'),
+          content: Text('Please enter all the required details.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return; // Prevent further registration logic
+    }
 
     // Perform registration actions with the data
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WelcomePage()),
+    );
     // ...
   }
   // ... (Previous code remains unchanged)
