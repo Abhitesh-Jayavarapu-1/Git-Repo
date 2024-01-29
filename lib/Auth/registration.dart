@@ -851,7 +851,7 @@ class DatePickerBox extends StatelessWidget {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     ))!;
-    if (picked != null && picked != DateTime.now())
+    if (picked != DateTime.now())
       controller.text = picked.toLocal().toString().split(' ')[0];
   }
 

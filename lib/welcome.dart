@@ -5,7 +5,6 @@ import 'package:poc/Apply%20Now/account_details.dart';
 import 'package:poc/Auth/login.dart';
 import 'package:poc/Communication/mail_box.dart';
 import 'package:poc/Communication/track_status.dart';
-import 'package:poc/Verification/verification.dart';
 
 void main() {
   runApp(MyApp());
