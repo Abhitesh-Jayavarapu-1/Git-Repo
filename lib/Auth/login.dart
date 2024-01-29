@@ -42,6 +42,15 @@ mixin ButtonFunctions {
       MaterialPageRoute(builder: (context) => InstructionPage()),
     );
   }
+
+  void forgotPasswordContinue(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResponsiveLayout(
+              webWidget: WebLayout(), mobileWidget: MobileLayout()),
+        ));
+  }
 }
 
 class MobileLayout extends StatefulWidget {
@@ -206,7 +215,8 @@ class _MobileLayoutState extends State<MobileLayout> with ButtonFunctions {
           ),
           MaterialButton(
             onPressed: () {
-              continueButtonSignUp(context);
+              // continueButtonSignUp(context);
+              forgotPasswordContinue(context);
             },
             textColor: Colors.white,
             minWidth: 350,
@@ -516,7 +526,8 @@ class _WebLayoutState extends State<WebLayout> with ButtonFunctions {
           ),
           MaterialButton(
             onPressed: () {
-              continueButtonSignUp(context);
+              // continueButtonSignUp(context);
+              forgotPasswordContinue(context);
             },
             textColor: Colors.white,
             minWidth: 350,
@@ -864,7 +875,7 @@ class _SignupTabState extends State<SignupTab> with ButtonFunctions {
                           groupValue: selectedRadio,
                           onChanged: (value) {
                             setState(() {
-                              selectedRadio = value.toString();
+                              selectedRadio = value;
                             });
                           },
                         ),
@@ -877,7 +888,7 @@ class _SignupTabState extends State<SignupTab> with ButtonFunctions {
                           groupValue: selectedRadio,
                           onChanged: (value) {
                             setState(() {
-                              selectedRadio = value.toString();
+                              selectedRadio = value;
                             });
                           },
                         ),
@@ -887,6 +898,13 @@ class _SignupTabState extends State<SignupTab> with ButtonFunctions {
                         ),
                       ],
                     ),
+                    Text(
+                      errorMessage ??
+                          '', // display if error message is not null
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
@@ -895,7 +913,17 @@ class _SignupTabState extends State<SignupTab> with ButtonFunctions {
                         //   MaterialPageRoute(
                         //       builder: (context) => InstructionPage()),
                         // );
-                        continueButtonSignUp(context);
+                        if (selectedRadio == null) {
+                          setState(() {
+                            errorMessage =
+                                'Please select an option for applying from Canada.';
+                          });
+                        } else {
+                          setState(() {
+                            errorMessage = null;
+                          });
+                          continueButtonSignUp(context);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 15),
